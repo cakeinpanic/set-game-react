@@ -1,7 +1,8 @@
-const AMOUNT = [1, 2, 3]
-const COLORS = ['RED', 'GREEN', 'BLUE']
-const SHAPE = ['CIRCLE', 'SQUARE', 'TRIANGLE']
-const STYLE = ['EMPTY', 'FILL', 'STRIPE']
+export enum COLORS {RED = 'RED', GREEN = 'GREEN', BLUE = 'BLUE'}
+
+export enum SHAPE {CIRCLE = 'CIRCLE', SQUARE = 'SQUARE', ROMB = 'ROMB'}
+
+export enum STYLE {EMPTY = 'EMPTY', FILL = 'FILL', STRIPE = 'STRIPE'}
 
 export interface ICard {
   amount: string
@@ -12,10 +13,12 @@ export interface ICard {
 
 export function generateAllCards(): ICard[] {
   let cards = [{}]
+  const AMOUNT = [1, 2, 3]
+
   cards = addQuality(cards, 'amount', AMOUNT)
-  cards = addQuality(cards, 'color', COLORS)
-  cards = addQuality(cards, 'shape', SHAPE)
-  cards = addQuality(cards, 'style', STYLE)
+  cards = addQuality(cards, 'color', [COLORS.BLUE, COLORS.RED, COLORS.GREEN])
+  cards = addQuality(cards, 'shape', [SHAPE.SQUARE, SHAPE.CIRCLE, SHAPE.ROMB])
+  cards = addQuality(cards, 'style', [STYLE.EMPTY, STYLE.FILL, STYLE.STRIPE])
   return shuffle(cards) as ICard[]
 }
 
