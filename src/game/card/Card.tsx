@@ -1,7 +1,7 @@
 import React from 'react'
 import './Card.scss'
 
-export const Card = ({value}) => {
+export const Card = ({ value }: any) => {
   const getElements = () => {
     let elements = []
     for (let i = 0; i < value.amount; i++) {

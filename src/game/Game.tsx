@@ -3,7 +3,7 @@ import { Card } from './card/Card'
 import './Game.scss'
 import { generateAllCards } from './set-utils'
 
-export const Game = ({ className }) => {
+export const Game = ({ className }: any) => {
   const allCards = generateAllCards()
   const currentCards = allCards.splice(0,9)
 
