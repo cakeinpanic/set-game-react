@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card } from './card/Card'
-import './Game.css'
+import './Game.scss'
 import { generateAllCards } from './set-utils'
 
 export const Game = ({ className }) => {

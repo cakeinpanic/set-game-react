@@ -1,7 +1,6 @@
 import React from 'react'
-import './App.css'
+import './App.scss'
 import { Game } from './game/Game'
-import { generateAllCards } from './game/set-utils'
 
 function App() {
 
