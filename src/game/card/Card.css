@@ -2,7 +2,57 @@
   width: 100px;
   height: 150px;
   background: white;
-  border: 1px solid black;
-  border-radius: 5px;
+  border: 1px solid rgba(0,0,0, .4);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  box-shadow: -4px 2px 11px -4px rgba(0,0,0,0.31);
 }
 
+.item {
+  display: block;
+  width: 50px;
+  height: 20px;
+  background: currentColor;
+  margin-bottom: 10px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: currentColor;
+}
+
+.circle {
+  border-radius: 60px;
+}
+
+.triangle {
+  transform: skew(20deg);
+}
+
+.blue {
+  color: aquamarine;
+}
+
+.red {
+  color: hotpink;
+}
+
+.green {
+  color: darkseagreen;
+}
+
+.solid {
+  background: currentColor;
+}
+
+.empty {
+  background: none;
+}
+
+.stripe {
+  background-image: linear-gradient(45deg, currentColor 10%, transparent 10%, transparent 50%, currentColor 50%, currentColor 60%, transparent 60%, transparent 100%);
+  background-size: 10px 10px;
+  background-color: transparent;;
+  border-color: currentColor;
+}
