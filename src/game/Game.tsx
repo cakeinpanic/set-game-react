@@ -1,34 +1,62 @@
 import React, { useEffect, useState } from 'react'
 import { Card } from './card/Card'
 import './Game.scss'
-import { generateAllCards, ICard } from './set-utils'
+import { checkIfSet, ICard } from './set-utils'
+import { GameUtils } from './game-utils'
+
+const TIMEOUT = 500
 
 export const Game = ({ className }: any) => {
-  const [allCards, setAllCards] = useState<ICard[]>([])
-
   const [currentCards, setCurrentCards] = useState<ICard[]>([])
-
+  const [selectedArr, setSelectedArr] = useState<number[]>([])
 
   useEffect(() => {
-    const newCards = generateAllCards()
-    setAllCards(newCards)
-    setCurrentCards(newCards.splice(0, 9))
+    GameUtils.startGame()
+    setCurrentCards(GameUtils.cardsOnTable)
   }, [])
 
-  const [selectedArr, setSelectedArr] = useState(new Array(9).fill(false))
+  useEffect(() => {
+    console.log(selectedArr)
+    if (selectedArr.length === 3) {
+      const selectedCards = selectedArr.map(cardIndex => currentCards[cardIndex])
+      const isSet = checkIfSet(selectedCards)
+
+      if (isSet) {
+        setTimeout(() => {handleSet()}, TIMEOUT)
+      } else {
+        setTimeout(() => {setSelectedArr([])}, TIMEOUT)
+      }
+    }
+  }, [selectedArr])
 
   const onSelect = (isSelected: boolean, cardIndex: number) => {
-    const updatedArr = [...selectedArr]
-    updatedArr[cardIndex] = isSelected
-    setSelectedArr(updatedArr)
+    const index = selectedArr.indexOf(cardIndex)
+
+    if (index === -1 && isSelected) {
+      setSelectedArr([...selectedArr, cardIndex])
+    } else {
+      const updated = [...selectedArr]
+      updated.splice(index, 1)
+      setSelectedArr(updated)
+    }
   }
+
+  const handleSet = () => {
+    GameUtils.removeSelectedCards(selectedArr)
+    setSelectedArr([])
+    setTimeout(() => {
+      GameUtils.drawNewCards()
+      setCurrentCards([...GameUtils.cardsOnTable])
+    }, TIMEOUT)
+  }
+
 
   return (
     <div className={className}>
       <h1>Game</h1>
       <div className="cards-container">
         {currentCards.map(
-          (item, index) => <Card key={index} value={item} isSelected={selectedArr[index]}
+          (item, index) => <Card key={index} value={item} isSelected={selectedArr.indexOf(index)>-1}
                                  onSelect={(newStatus) => onSelect(newStatus, index)}/>)}
       </div>
     </div>

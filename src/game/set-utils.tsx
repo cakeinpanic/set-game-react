@@ -22,6 +22,17 @@ export function generateAllCards(): ICard[] {
   return shuffle(cards) as ICard[]
 }
 
+export function checkIfSet(cards: ICard[]): boolean {
+  return isQualitySetable(cards, 'amount') && isQualitySetable(cards, 'color') &&
+    isQualitySetable(cards, 'shape') && isQualitySetable(cards, 'style')
+}
+
+function isQualitySetable(cards: ICard[], qualityName: string): boolean {
+  const q: any[] = cards.map(card => (card as any)[qualityName])
+  const uniq = new Set(q)
+  return uniq.size === 1 || uniq.size === cards.length
+
+}
 function shuffle(array: any[]): any[] {
   return array.sort(() => Math.random() - 0.5)
 }
@@ -31,3 +42,4 @@ function addQuality(cards: any[], qualityName: string, qualityValues: any[]) {
     return qualityValues.map(value => ({ ...card, ...{ [qualityName]: value } }))
   }).flat(Infinity)
 }
+
