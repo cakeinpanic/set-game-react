@@ -5,7 +5,7 @@ export enum SHAPE {CIRCLE = 'CIRCLE', SQUARE = 'SQUARE', ROMB = 'ROMB'}
 export enum STYLE {EMPTY = 'EMPTY', FILL = 'FILL', STRIPE = 'STRIPE'}
 
 export interface ICard {
-  amount: string
+  amount: number
   color: string
   shape: string
   style: string

@@ -1,7 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './Card.scss'
+import { ICard } from '../set-utils'
 
-export const Card = ({ value }: any) => {
+export interface ICardProps {
+  value: ICard,
+  isSelected: boolean,
+  onSelect: (p: boolean) => void
+}
+
+export const Card = ({ value, isSelected, onSelect }: ICardProps) => {
+
   const getElements = () => {
     let elements = []
     for (let i = 0; i < value.amount; i++) {
@@ -10,7 +18,9 @@ export const Card = ({ value }: any) => {
     }
     return elements
   }
-  return (<div className="card">
+
+  return (
+    <div className={'card ' + (isSelected ? 'selected' : '')} onClick={() => onSelect(!isSelected)}>
     {getElements()}
   </div>)
 }

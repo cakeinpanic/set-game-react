@@ -9,6 +9,13 @@
   align-items: center;
   justify-content: space-evenly;
   box-shadow: -4px 2px 11px -4px rgba(0,0,0,0.31);
+  cursor: pointer;
+  box-sizing: border-box;
+  
+  &.selected {
+    box-shadow: -4px 2px 11px -4px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgb(107, 91, 5);
+  }
 }
 
 .item {
