@@ -23,6 +23,7 @@ export function generateAllCards(): ICard[] {
 }
 
 export function checkIfSet(cards: ICard[]): boolean {
+  console.log(cards)
   return isQualitySetable(cards, 'amount') && isQualitySetable(cards, 'color') &&
     isQualitySetable(cards, 'shape') && isQualitySetable(cards, 'style')
 }
@@ -31,7 +32,19 @@ function isQualitySetable(cards: ICard[], qualityName: string): boolean {
   const q: any[] = cards.map(card => (card as any)[qualityName])
   const uniq = new Set(q)
   return uniq.size === 1 || uniq.size === cards.length
+}
 
+export function findSet(cards: ICard[]): number[] {
+  for (let i = 0; i < cards.length; i++) {
+    for (let j = i + 1; j < cards.length; j++) {
+      for (let k = j + 1; k < cards.length; k++) {
+        if (checkIfSet([cards[i], cards[j], cards[k]])) {
+          return [i, j, k]
+        }
+      }
+    }
+  }
+  return []
 }
 function shuffle(array: any[]): any[] {
   return array.sort(() => Math.random() - 0.5)

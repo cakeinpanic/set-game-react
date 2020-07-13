@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Card } from './card/Card'
 import './Game.scss'
-import { checkIfSet, ICard } from './set-utils'
+import { checkIfSet, findSet, ICard } from './set-utils'
 import { GameUtils } from './game-utils'
 
 const TIMEOUT = 500
@@ -50,10 +50,17 @@ export const Game = ({ className }: any) => {
     }, TIMEOUT)
   }
 
+  const findSetAutomatically = () => {
+    const setCards = findSet(currentCards)
+    if (setCards.length) {
+      setSelectedArr(setCards)
+    }
+  }
 
   return (
     <div className={className}>
       <h1>Game</h1>
+      <button onClick={findSetAutomatically}>HELP!</button>
       <div className="cards-container">
         {currentCards.map(
           (item, index) => <Card key={index} value={item} isSelected={selectedArr.indexOf(index)>-1}
