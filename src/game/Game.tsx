@@ -16,7 +16,6 @@ export const Game = ({ className }: any) => {
   }, [])
 
   useEffect(() => {
-    console.log(selectedArr)
     if (selectedArr.length === 3) {
       const selectedCards = selectedArr.map(cardIndex => currentCards[cardIndex])
       const isSet = checkIfSet(selectedCards)
@@ -58,9 +57,14 @@ export const Game = ({ className }: any) => {
   }
 
   return (
-    <div className={className}>
-      <h1>Game</h1>
-      <button onClick={findSetAutomatically}>HELP!</button>
+    <div className="game">
+      <div className="header">
+        <h1>Set game</h1>
+        <div className="btn-container">
+        <button  className="btn">HOW TO</button>
+        <button onClick={findSetAutomatically} className="btn">HELP ME!</button>
+        </div>
+      </div>
       <div className="cards-container">
         {currentCards.map(
           (item, index) => <Card key={index} value={item} isSelected={selectedArr.indexOf(index)>-1}
