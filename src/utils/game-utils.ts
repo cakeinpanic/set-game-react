@@ -1,15 +1,13 @@
 import { findSet, generateAllCards, ICard } from './set-utils'
 
 export const SET_SIZE = 3
-export const MIN_BOARD_SIZE = 9
+export const MIN_BOARD_SIZE = 12
 class Game {
   allCards: ICard[] = []
   playedCards: ICard[] = []
   cardsOnTable: ICard[] = []
 
   nextSet: number[] = []
-
-  constructor() {}
 
   startGame() {
     this.allCards = generateAllCards()

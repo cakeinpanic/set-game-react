@@ -3,6 +3,7 @@ import { Card } from '../card/Card'
 import './Game.scss'
 import { checkIfSet, ICard } from '../utils/set-utils'
 import { GameUtils, SET_SIZE } from '../utils/game-utils'
+import { RulesPopup } from './RulesPopup'
 
 const TIMEOUT = 500
 
@@ -10,7 +11,7 @@ export const Game = () => {
   const [currentCards, setCurrentCards] = useState<ICard[]>([])
   const [selectedCardIndexes, setSelectedCardIndexes] = useState<number[]>([])
   const [gameOver, setGameOver] = useState<boolean>(false)
-
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
   useEffect(() => {restartGame()}, [])
 
   useEffect(() => {
@@ -24,7 +25,7 @@ export const Game = () => {
         setTimeout(() => {setSelectedCardIndexes([])}, TIMEOUT)
       }
     }
-  }, [selectedCardIndexes])
+  }, [selectedCardIndexes, currentCards])
 
   useEffect(() => {
     setGameOver(GameUtils.nextSet.length === 0)
@@ -75,7 +76,7 @@ export const Game = () => {
         <h1>Set game</h1>
         <div className="btn-container">
           <div className="info">Cards left: {GameUtils.allCards.length}</div>
-          <button className="btn">HOW TO</button>
+          <button className="btn" onClick={() => setIsModalVisible(true)}>HOW TO</button>
           {!gameOver && <button onClick={highlightSetAutomatically} className="btn">HELP ME!</button>}
           {gameOver && <button onClick={restartGame} className="btn">RESTART</button>}
         </div>
@@ -88,6 +89,8 @@ export const Game = () => {
           </div>
         </div>)}
       </div>
+      <RulesPopup isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}/>
+
     </div>
   )
 }
