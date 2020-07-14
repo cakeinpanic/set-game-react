@@ -11,9 +11,7 @@ export const Game = () => {
   const [selectedCardIndexes, setSelectedCardIndexes] = useState<number[]>([])
   const [gameOver, setGameOver] = useState<boolean>(false)
 
-  useEffect(() => {
-    restartGame()
-  }, [])
+  useEffect(() => {restartGame()}, [])
 
   useEffect(() => {
     if (selectedCardIndexes.length === SET_SIZE) {
@@ -84,6 +82,11 @@ export const Game = () => {
       </div>
       <div className="cards-container">
         {renderBoard()}
+        {gameOver && (<div className="gameOver">
+          <div className="stamp">
+            Game over
+          </div>
+        </div>)}
       </div>
     </div>
   )
