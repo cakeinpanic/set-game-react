@@ -1,59 +1,74 @@
 import React, { useEffect, useState } from 'react'
-import { Card } from './card/Card'
+import { Card } from '../card/Card'
 import './Game.scss'
-import { checkIfSet, findSet, ICard } from './set-utils'
-import { GameUtils } from './game-utils'
+import { checkIfSet, ICard } from '../utils/set-utils'
+import { GameUtils, SET_SIZE } from '../utils/game-utils'
 
 const TIMEOUT = 500
 
-export const Game = ({ className }: any) => {
+export const Game = () => {
   const [currentCards, setCurrentCards] = useState<ICard[]>([])
-  const [selectedArr, setSelectedArr] = useState<number[]>([])
+  const [selectedCardIndexes, setSelectedCardIndexes] = useState<number[]>([])
+  const [gameOver, setGameOver] = useState<boolean>(false)
 
   useEffect(() => {
-    GameUtils.startGame()
-    setCurrentCards(GameUtils.cardsOnTable)
+    restartGame()
   }, [])
 
   useEffect(() => {
-    if (selectedArr.length === 3) {
-      const selectedCards = selectedArr.map(cardIndex => currentCards[cardIndex])
+    if (selectedCardIndexes.length === SET_SIZE) {
+      const selectedCards = selectedCardIndexes.map(cardIndex => currentCards[cardIndex])
       const isSet = checkIfSet(selectedCards)
 
       if (isSet) {
         setTimeout(() => {handleSet()}, TIMEOUT)
       } else {
-        setTimeout(() => {setSelectedArr([])}, TIMEOUT)
+        setTimeout(() => {setSelectedCardIndexes([])}, TIMEOUT)
       }
     }
-  }, [selectedArr])
+  }, [selectedCardIndexes])
 
-  const onSelect = (isSelected: boolean, cardIndex: number) => {
-    const index = selectedArr.indexOf(cardIndex)
+  useEffect(() => {
+    setGameOver(GameUtils.nextSet.length === 0)
+  }, [currentCards])
 
-    if (index === -1 && isSelected) {
-      setSelectedArr([...selectedArr, cardIndex])
-    } else {
-      const updated = [...selectedArr]
-      updated.splice(index, 1)
-      setSelectedArr(updated)
+  const onCardSelect = (isSelected: boolean, cardIndex: number) => {
+    if (selectedCardIndexes.indexOf(cardIndex) === -1 && isSelected) {
+      setSelectedCardIndexes([...selectedCardIndexes, cardIndex])
+      return
     }
+    setSelectedCardIndexes(selectedCardIndexes.filter(index => index !== cardIndex))
+
   }
 
   const handleSet = () => {
-    GameUtils.removeSelectedCards(selectedArr)
-    setSelectedArr([])
+    GameUtils.removeSelectedCards(selectedCardIndexes)
+    setSelectedCardIndexes([])
+
     setTimeout(() => {
-      GameUtils.drawNewCards()
+      GameUtils.drawMoreCards()
       setCurrentCards([...GameUtils.cardsOnTable])
     }, TIMEOUT)
   }
 
-  const findSetAutomatically = () => {
-    const setCards = findSet(currentCards)
+  const highlightSetAutomatically = () => {
+    const setCards = GameUtils.nextSet
     if (setCards.length) {
-      setSelectedArr(setCards)
+      setSelectedCardIndexes(setCards)
     }
+  }
+
+  const restartGame = () => {
+    GameUtils.startGame()
+    setCurrentCards(GameUtils.cardsOnTable)
+  }
+
+  const renderBoard = () => {
+    return currentCards.map((item, index) =>
+      <Card key={index}
+            card={item}
+            isSelected={selectedCardIndexes.indexOf(index) > -1}
+            onSelect={(newStatus) => onCardSelect(newStatus, index)}/>)
   }
 
   return (
@@ -61,14 +76,14 @@ export const Game = ({ className }: any) => {
       <div className="header">
         <h1>Set game</h1>
         <div className="btn-container">
-        <button  className="btn">HOW TO</button>
-        <button onClick={findSetAutomatically} className="btn">HELP ME!</button>
+          <div className="info">Cards left: {GameUtils.allCards.length}</div>
+          <button className="btn">HOW TO</button>
+          {!gameOver && <button onClick={highlightSetAutomatically} className="btn">HELP ME!</button>}
+          {gameOver && <button onClick={restartGame} className="btn">RESTART</button>}
         </div>
       </div>
       <div className="cards-container">
-        {currentCards.map(
-          (item, index) => <Card key={index} value={item} isSelected={selectedArr.indexOf(index)>-1}
-                                 onSelect={(newStatus) => onSelect(newStatus, index)}/>)}
+        {renderBoard()}
       </div>
     </div>
   )

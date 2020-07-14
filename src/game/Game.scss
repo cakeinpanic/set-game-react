@@ -19,18 +19,28 @@
   margin-bottom: 10px;
 }
 
+$btn-color: #ff8b51;
+
 .header {
   display: flex;
   justify-content: space-between;
   width: 100%;
   margin-bottom: 20px;
+  font-family: 'Montserrat', sans-serif;
+  
+  .info {
+    font-size: 1.1rem;
+    color: $btn-color;
+    font-weight: bold;
+    padding: 0.5em 1.4em;
+  }
 }
 
 .btn-container {
   display: flex;
+  align-self: center;
 }
 
-$btn-color: #ff8b51;
 
 .btn {
   box-sizing: border-box;
@@ -44,12 +54,11 @@ $btn-color: #ff8b51;
   align-self: center;
   font-size: 1rem;
   line-height: 1;
-  margin: 20px;
+  margin-left: 20px;
   padding: 0.5em 2.2em;
   text-decoration: none;
   text-align: center;
   text-transform: uppercase;
-  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   
   background: {
@@ -57,6 +66,7 @@ $btn-color: #ff8b51;
     position: 100%;
     size: 400%;
   }
+  
   transition: background 300ms ease-in-out;
   
   &:hover,
@@ -66,4 +76,9 @@ $btn-color: #ff8b51;
     background-position: 0;
   }
   
+  &:disabled {
+    cursor: default;
+    // pointer-events: none;
+    opacity: .5;
+  }
 }

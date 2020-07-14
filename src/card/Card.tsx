@@ -1,19 +1,19 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './Card.scss'
-import { ICard } from '../set-utils'
+import { ICard } from '../utils/set-utils'
 
 export interface ICardProps {
-  value: ICard,
+  card: ICard,
   isSelected: boolean,
   onSelect: (p: boolean) => void
 }
 
-export const Card = ({ value, isSelected, onSelect }: ICardProps) => {
+export const Card = ({ card, isSelected, onSelect }: ICardProps) => {
 
   const getElements = () => {
     let elements = []
-    for (let i = 0; i < value.amount; i++) {
-      const className = ['item', value.color, value.shape, value.style].join(' ').toLowerCase()
+    for (let i = 0; i < card.amount; i++) {
+      const className = ['item', card.color, card.shape, card.style].join(' ').toLowerCase()
       elements.push(<div className={className} key={className + i}></div>)
     }
     return elements

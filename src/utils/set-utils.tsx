@@ -23,7 +23,6 @@ export function generateAllCards(): ICard[] {
 }
 
 export function checkIfSet(cards: ICard[]): boolean {
-  console.log(cards)
   return isQualitySetable(cards, 'amount') && isQualitySetable(cards, 'color') &&
     isQualitySetable(cards, 'shape') && isQualitySetable(cards, 'style')
 }
