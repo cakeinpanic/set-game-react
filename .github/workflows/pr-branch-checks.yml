@@ -4,38 +4,21 @@ on:
     branches:
       - master
 jobs:
-  build-test:
-    runs-on: ubuntu-16.04
+  deploy:
+    runs-on: ubuntu-18.04
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      name: setup node
-      with:
-        node-version: '13.x'
+      - uses: actions/checkout@v2
 
-    - name: "install"
-      run: npm i
+      - name: Setup Node
+        uses: actions/setup-node@v2.1.0
+        with:
+          node-version: '12.x'
 
-    - name: "build"
-      run: npm run build
+      - run: npm install
+      - run: npm run build
 
-    - name: "move files"
-      run: |
-          npm run build
-          cp -r build/** .
-          git add .
-          git stash
-          git checkout gh-pages
-          git stash pop
-
-    - name: "Commit files"
-      run: |
-          git config --local user.email "cakeinpanic@gmail.com"
-          git config --local user.name "Katya Pavlenko"
-          git commit -am "build gh-pages"
-
-    - name: "Push changes"
-      uses: ad-m/github-push-action@master
-      with:
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-         branch: gh-pages
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
