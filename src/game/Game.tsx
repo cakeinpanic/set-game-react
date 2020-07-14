@@ -15,6 +15,18 @@ export const Game = () => {
   useEffect(() => {restartGame()}, [])
 
   useEffect(() => {
+
+    const handleSet = () => {
+      GameUtils.removeSelectedCards(selectedCardIndexes)
+      setSelectedCardIndexes([])
+
+      setTimeout(() => {
+        GameUtils.drawMoreCards()
+        setCurrentCards([...GameUtils.cardsOnTable])
+      }, TIMEOUT)
+    }
+
+
     if (selectedCardIndexes.length === SET_SIZE) {
       const selectedCards = selectedCardIndexes.map(cardIndex => currentCards[cardIndex])
       const isSet = checkIfSet(selectedCards)
@@ -38,16 +50,6 @@ export const Game = () => {
     }
     setSelectedCardIndexes(selectedCardIndexes.filter(index => index !== cardIndex))
 
-  }
-
-  const handleSet = () => {
-    GameUtils.removeSelectedCards(selectedCardIndexes)
-    setSelectedCardIndexes([])
-
-    setTimeout(() => {
-      GameUtils.drawMoreCards()
-      setCurrentCards([...GameUtils.cardsOnTable])
-    }, TIMEOUT)
   }
 
   const highlightSetAutomatically = () => {

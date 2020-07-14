@@ -17,13 +17,22 @@ jobs:
       run: npm i
 
     - name: "build"
-      run: npm run build && mv build/** .
+      run: npm run build
+
+    - name: "move files"
+      run: |
+          npm run build
+          cp -r build/** .
+          git add .
+          git stash
+          git checkout gh-pages
+          git stash pop
 
     - name: "Commit files"
       run: |
           git config --local user.email "cakeinpanic@gmail.com"
           git config --local user.name "Katya Pavlenko"
-          git commit -m "build gh-pages" -a
+          git commit -am "build gh-pages"
 
     - name: "Push changes"
       uses: ad-m/github-push-action@master
