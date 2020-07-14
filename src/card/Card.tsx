@@ -6,9 +6,10 @@ export interface ICardProps {
   card: ICard,
   isSelected: boolean,
   onSelect: (p: boolean) => void
+  isAutomaticAction: boolean
 }
 
-export const Card = ({ card, isSelected, onSelect }: ICardProps) => {
+export const Card = ({ card, isSelected, onSelect, isAutomaticAction }: ICardProps) => {
 
   const getElements = () => {
     let elements = []
@@ -19,8 +20,10 @@ export const Card = ({ card, isSelected, onSelect }: ICardProps) => {
     return elements
   }
 
+  const className = ['card ', (isSelected ? 'selected' : ''), (isSelected && isAutomaticAction ? 'selected-auto': '')].join(' ')
+
   return (
-    <div className={'card ' + (isSelected ? 'selected' : '')} onClick={() => onSelect(!isSelected)}>
+    <div className={className} onClick={() => onSelect(!isSelected)}>
     {getElements()}
   </div>)
 }

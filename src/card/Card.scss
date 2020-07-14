@@ -13,8 +13,13 @@
   box-sizing: border-box;
   
   &.selected {
-    box-shadow: -4px 2px 11px -4px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 1px 8px 1px rgba(0, 0, 0, 0.5);
     border: 2px solid rgb(107, 91, 5);
+    
+    &-auto {
+      border-color: hotpink;
+      box-shadow: 0px 1px 8px 1px rgba(hotpink, 0.5);
+    }
   }
 }
 

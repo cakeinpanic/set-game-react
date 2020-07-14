@@ -12,10 +12,11 @@ export const Game = () => {
   const [selectedCardIndexes, setSelectedCardIndexes] = useState<number[]>([])
   const [gameOver, setGameOver] = useState<boolean>(false)
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
+  const [isUserActionLast, setIsUserActionLast] = useState<boolean>(false)
+
   useEffect(() => {restartGame()}, [])
 
   useEffect(() => {
-
     const handleSet = () => {
       GameUtils.removeSelectedCards(selectedCardIndexes)
       setSelectedCardIndexes([])
@@ -26,8 +27,7 @@ export const Game = () => {
       }, TIMEOUT)
     }
 
-
-    if (selectedCardIndexes.length === SET_SIZE) {
+    if (isUserActionLast && selectedCardIndexes.length === SET_SIZE) {
       const selectedCards = selectedCardIndexes.map(cardIndex => currentCards[cardIndex])
       const isSet = checkIfSet(selectedCards)
 
@@ -37,13 +37,20 @@ export const Game = () => {
         setTimeout(() => {setSelectedCardIndexes([])}, TIMEOUT)
       }
     }
-  }, [selectedCardIndexes, currentCards])
+  }, [selectedCardIndexes, currentCards, isUserActionLast])
 
   useEffect(() => {
     setGameOver(GameUtils.nextSet.length === 0)
   }, [currentCards])
 
   const onCardSelect = (isSelected: boolean, cardIndex: number) => {
+    setIsUserActionLast(true)
+
+    if (!isUserActionLast) {
+      setSelectedCardIndexes([cardIndex])
+      return
+    }
+
     if (selectedCardIndexes.indexOf(cardIndex) === -1 && isSelected) {
       setSelectedCardIndexes([...selectedCardIndexes, cardIndex])
       return
@@ -53,6 +60,7 @@ export const Game = () => {
   }
 
   const highlightSetAutomatically = () => {
+    setIsUserActionLast(false)
     const setCards = GameUtils.nextSet
     if (setCards.length) {
       setSelectedCardIndexes(setCards)
@@ -69,6 +77,7 @@ export const Game = () => {
       <Card key={index}
             card={item}
             isSelected={selectedCardIndexes.indexOf(index) > -1}
+            isAutomaticAction={!isUserActionLast}
             onSelect={(newStatus) => onCardSelect(newStatus, index)}/>)
   }
 
