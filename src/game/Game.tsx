@@ -6,13 +6,13 @@ import { GameUtils, SET_SIZE } from '../utils/game-utils'
 import { RulesPopup } from './RulesPopup'
 
 const TIMEOUT = 500
-
+const HINT_TIMEOUT = 2000;
 export const Game = () => {
   const [currentCards, setCurrentCards] = useState<ICard[]>([])
   const [selectedCardIndexes, setSelectedCardIndexes] = useState<number[]>([])
+  const [hintedCardIndexes, setHintedCardIndexes] = useState<number[]>([])
   const [gameOver, setGameOver] = useState<boolean>(false)
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
-  const [isUserActionLast, setIsUserActionLast] = useState<boolean>(false)
 
   useEffect(() => {restartGame()}, [])
 
@@ -27,7 +27,7 @@ export const Game = () => {
       }, TIMEOUT)
     }
 
-    if (isUserActionLast && selectedCardIndexes.length === SET_SIZE) {
+    if (selectedCardIndexes.length === SET_SIZE) {
       const selectedCards = selectedCardIndexes.map(cardIndex => currentCards[cardIndex])
       const isSet = checkIfSet(selectedCards)
 
@@ -37,20 +37,14 @@ export const Game = () => {
         setTimeout(() => {setSelectedCardIndexes([])}, TIMEOUT)
       }
     }
-  }, [selectedCardIndexes, currentCards, isUserActionLast])
+  }, [selectedCardIndexes, currentCards])
 
   useEffect(() => {
     setGameOver(GameUtils.nextSet.length === 0)
   }, [currentCards])
 
   const onCardSelect = (isSelected: boolean, cardIndex: number) => {
-    setIsUserActionLast(true)
-
-    if (!isUserActionLast) {
-      setSelectedCardIndexes([cardIndex])
-      return
-    }
-
+    setHintedCardIndexes([])
     if (selectedCardIndexes.indexOf(cardIndex) === -1 && isSelected) {
       setSelectedCardIndexes([...selectedCardIndexes, cardIndex])
       return
@@ -59,12 +53,12 @@ export const Game = () => {
 
   }
 
-  const highlightSetAutomatically = () => {
-    setIsUserActionLast(false)
+  const hintSet = () => {
     const setCards = GameUtils.nextSet
     if (setCards.length) {
-      setSelectedCardIndexes(setCards)
+      setHintedCardIndexes(setCards)
     }
+    setTimeout(()=>setHintedCardIndexes([]), HINT_TIMEOUT)
   }
 
   const restartGame = () => {
@@ -77,7 +71,7 @@ export const Game = () => {
       <Card key={index}
             card={item}
             isSelected={selectedCardIndexes.indexOf(index) > -1}
-            isAutomaticAction={!isUserActionLast}
+            isHighlighted={hintedCardIndexes.indexOf(index) > -1}
             onSelect={(newStatus) => onCardSelect(newStatus, index)}/>)
   }
 
@@ -88,7 +82,7 @@ export const Game = () => {
         <div className="btn-container">
           <div className="info">Cards left: {GameUtils.allCards.length}</div>
           <button className="btn" onClick={() => setIsModalVisible(true)}>HOW TO</button>
-          {!gameOver && <button onClick={highlightSetAutomatically} className="btn">HELP ME!</button>}
+          {!gameOver && <button onClick={hintSet} className="btn">HELP ME!</button>}
           {gameOver && <button onClick={restartGame} className="btn">RESTART</button>}
         </div>
       </div>
