@@ -1,5 +1,5 @@
 .card {
-  width: 100px;
+  width: 115px;
   height: 170px;
   background: white;
   position: relative;
@@ -23,16 +23,15 @@
     height: 100%;
     border-radius: 10px;
     transition: all .1s ease-in;
-    border: 2px solid hotpink;
-    border-color: rgba(hotpink, 0)
+    border: 2px solid  rgba(hotpink, 0);
   }
   
   &.selected {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 4px #70d1ff;
     transform: scale(1.04);
     
     &:after {
-      border-color: #0284ff;
+      border-color: #70d1ff;
     }
   }
   
@@ -66,15 +65,15 @@
 }
 
 .blue {
-  color: aquamarine;
+  color: #02a1e0;
 }
 
 .red {
-  color: hotpink;
+  color: #6aa74b;
 }
 
 .green {
-  color: darkseagreen;
+  color: #FF6B6B;
 }
 
 .solid {

@@ -78,9 +78,9 @@ export const Game = () => {
   return (
     <div className="game">
       <div className="header">
-        <h1>Set game</h1>
+        <h1>SET GAME</h1>
         <div className="btn-container">
-          <div className="info">Cards left: {GameUtils.allCards.length}</div>
+          <div className="info">CARDS LEFT: {GameUtils.allCards.length}</div>
           <button className="btn" onClick={() => setIsModalVisible(true)}>HOW TO</button>
           {!gameOver && <button onClick={hintSet} className="btn">HELP ME!</button>}
           {gameOver && <button onClick={restartGame} className="btn">RESTART</button>}
