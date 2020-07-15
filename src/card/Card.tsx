@@ -6,10 +6,11 @@ export interface ICardProps {
   card: ICard,
   isSelected: boolean,
   onSelect: (p: boolean) => void
-  isHighlighted: boolean
+  isHighlighted: boolean,
+  style: any
 }
 
-export const Card = ({ card, isSelected, onSelect, isHighlighted }: ICardProps) => {
+export const Card = ({ style, card, isSelected, onSelect, isHighlighted }: ICardProps) => {
 
   const getElements = () => {
     let elements = []
@@ -23,7 +24,7 @@ export const Card = ({ card, isSelected, onSelect, isHighlighted }: ICardProps) 
   const className = ['card ', (isSelected ? 'selected' : ''), (isHighlighted ? 'highlighted' : '')].join(' ')
 
   return (
-    <div className={className} onClick={() => onSelect(!isSelected)}>
+    <div className={className} onClick={() => onSelect(!isSelected)} style={style}>
     {getElements()}
   </div>)
 }

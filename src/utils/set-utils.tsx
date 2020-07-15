@@ -55,4 +55,3 @@ function addType(cards: any[], qualityName: string, qualityValues: any[]) {
     return qualityValues.map(value => ({ ...card, ...{ [qualityName]: value } }))
   }).flat(Infinity)
 }
-

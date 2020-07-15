@@ -20,6 +20,8 @@ export const Game = () => {
     const handleSet = () => {
       GameUtils.removeSelectedCards(selectedCardIndexes)
       setSelectedCardIndexes([])
+      setCurrentCards([...GameUtils.cardsOnTable])
+
 
       setTimeout(() => {
         GameUtils.drawMoreCards()
@@ -63,16 +65,28 @@ export const Game = () => {
 
   const restartGame = () => {
     GameUtils.startGame()
-    setCurrentCards(GameUtils.cardsOnTable)
+    setCurrentCards([...GameUtils.cardsOnTable])
   }
 
   const renderBoard = () => {
-    return currentCards.map((item, index) =>
-      <Card key={index}
-            card={item}
-            isSelected={selectedCardIndexes.indexOf(index) > -1}
-            isHighlighted={hintedCardIndexes.indexOf(index) > -1}
-            onSelect={(newStatus) => onCardSelect(newStatus, index)}/>)
+    const cardHeight = 180
+    const cardWidth = 130
+    return currentCards.map((item, index) => {
+      const top = Math.floor(index / 4) * cardHeight
+      const left = (index % 4) * cardWidth
+
+      const divStyle = {
+        top: top + 'px',
+        left: left + 'px'
+      }
+
+      return (<Card key={index}
+                    card={item}
+                    style={divStyle}
+                    isSelected={selectedCardIndexes.indexOf(index) > -1}
+                    isHighlighted={hintedCardIndexes.indexOf(index) > -1}
+                    onSelect={(newStatus) => onCardSelect(newStatus, index)}/>)
+    })
   }
 
   return (
