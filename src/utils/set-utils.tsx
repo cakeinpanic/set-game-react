@@ -1,3 +1,5 @@
+import { CardItem } from './game-utils'
+
 export enum COLORS {RED = 'RED', GREEN = 'GREEN', BLUE = 'BLUE'}
 export enum SHAPE {CIRCLE = 'CIRCLE', SQUARE = 'SQUARE', ROMB = 'ROMB'}
 export enum STYLE {EMPTY = 'EMPTY', FILL = 'FILL', STRIPE = 'STRIPE'}
@@ -20,20 +22,20 @@ export function generateAllCards(): ICard[] {
   return shuffle(cards) as ICard[]
 }
 
-export function checkIfSet(cards: ICard[]): boolean {
+export function checkIfSet(cards: CardItem[]): boolean {
   return canMakeSetByType(cards, 'amount') &&
     canMakeSetByType(cards, 'color') &&
     canMakeSetByType(cards, 'shape') &&
     canMakeSetByType(cards, 'style')
 }
 
-function canMakeSetByType(cards: ICard[], qualityName: string): boolean {
-  const q: any[] = cards.map(card => (card as any)[qualityName])
+function canMakeSetByType(cards: CardItem[], qualityName: string): boolean {
+  const q: any[] = cards.map(card => card && (card as any)[qualityName])
   const uniq = new Set(q)
   return uniq.size === 1 || uniq.size === cards.length
 }
 
-export function findSet(cards: ICard[]): number[] {
+export function findSet(cards: CardItem[]): number[] {
   for (let i = 0; i < cards.length; i++) {
     for (let j = i + 1; j < cards.length; j++) {
       for (let k = j + 1; k < cards.length; k++) {

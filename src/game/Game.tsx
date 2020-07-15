@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { Card } from '../card/Card'
 import './Game.scss'
-import { checkIfSet, ICard } from '../utils/set-utils'
-import { GameUtils, SET_SIZE } from '../utils/game-utils'
+import { checkIfSet } from '../utils/set-utils'
+import { CardItem, GameUtils, SET_SIZE } from '../utils/game-utils'
 import { RulesPopup } from './RulesPopup'
 
 const TIMEOUT = 500
 const HINT_TIMEOUT = 2000;
 export const Game = () => {
-  const [currentCards, setCurrentCards] = useState<ICard[]>([])
+  const [currentCards, setCurrentCards] = useState<CardItem[]>([])
   const [selectedCardIndexes, setSelectedCardIndexes] = useState<number[]>([])
   const [hintedCardIndexes, setHintedCardIndexes] = useState<number[]>([])
   const [gameOver, setGameOver] = useState<boolean>(false)
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
 
   useEffect(() => {restartGame()}, [])
+  useEffect(() => {console.log(currentCards)}, [currentCards])
 
   useEffect(() => {
     const handleSet = () => {
@@ -22,9 +23,8 @@ export const Game = () => {
       setSelectedCardIndexes([])
       setCurrentCards([...GameUtils.cardsOnTable])
 
-
       setTimeout(() => {
-        GameUtils.drawMoreCards()
+        GameUtils.replaceRemovedCardsWithNew()
         setCurrentCards([...GameUtils.cardsOnTable])
       }, TIMEOUT)
     }
@@ -71,7 +71,11 @@ export const Game = () => {
   const renderBoard = () => {
     const cardHeight = 180
     const cardWidth = 130
-    return currentCards.map((item, index) => {
+
+    return currentCards.map((card, index) => {
+      if (!card) {
+        return <div key={index}></div>
+      }
       const top = Math.floor(index / 4) * cardHeight
       const left = (index % 4) * cardWidth
 
@@ -81,7 +85,7 @@ export const Game = () => {
       }
 
       return (<Card key={index}
-                    card={item}
+                    card={card}
                     style={divStyle}
                     isSelected={selectedCardIndexes.indexOf(index) > -1}
                     isHighlighted={hintedCardIndexes.indexOf(index) > -1}
