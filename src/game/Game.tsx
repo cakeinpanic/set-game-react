@@ -4,6 +4,7 @@ import './Game.scss'
 import { checkIfSet } from '../utils/set-utils'
 import { CardItem, GameUtils, MIN_BOARD_SIZE, SET_SIZE } from '../utils/game-utils'
 import { RulesPopup } from './RulesPopup'
+import { GameHeader } from './GameHeader'
 
 const TIMEOUT = 500
 const HINT_TIMEOUT = 2000;
@@ -21,7 +22,7 @@ export interface ICardView {
 
 export const Game = () => {
   const [currentCards, setCurrentCards] = useState<ICardView[]>([])
-  const [gameOver, setGameOver] = useState<boolean>(false)
+  const [isGameOver, setIsGameOver] = useState<boolean>(false)
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
 
   let hintRemovingTimeout = useRef<any>(null)
@@ -30,7 +31,6 @@ export const Game = () => {
   //useEffect(() => {console.log(currentCards)}, [currentCards])
 
   useEffect(() => {
-    clearTimeout(hintRemovingTimeout.current)
     const selectedCards = currentCards.filter((cardItem) => cardItem.isSelected && !cardItem.isRemoving)
 
     const handleSet = () => {
@@ -53,8 +53,8 @@ export const Game = () => {
     }
 
     if (selectedCards.length === SET_SIZE) {
+      clearTimeout(hintRemovingTimeout.current)
       const isSet = checkIfSet(selectedCards.map(({ card }) => card))
-      console.log(isSet)
       if (isSet) {
         handleSet()
       } else {
@@ -65,7 +65,7 @@ export const Game = () => {
     }
   }, [currentCards])
 
-  useEffect(() => {setGameOver(GameUtils.nextSet.length === 0)}, [currentCards])
+  useEffect(() => {setIsGameOver(GameUtils.nextSet.length === 0)}, [currentCards])
 
   const onCardSelect = (isSelected: boolean, cardIndex: number) => {
     const updatedCards = currentCards.map(
@@ -122,21 +122,15 @@ export const Game = () => {
 
   return (
     <div className="game">
-      <div className="header">
-        <div className="header-content">
-          <h1>SET GAME</h1>
-          <div className="btn-container">
-            <div className="info">CARDS LEFT: {GameUtils.allCards.length}</div>
-            <button className="btn" onClick={() => setIsModalVisible(true)}>HOW TO</button>
-            {!gameOver && <button onClick={hintSet} className="btn">HELP ME!</button>}
-            {gameOver && <button onClick={restartGame} className="btn">RESTART</button>}
-          </div>
-        </div>
-      </div>
+      <GameHeader openHelp={() => setIsModalVisible(true)}
+                  hintSet={() => hintSet()}
+                  cardsOnBoard={GameUtils.allCards.length}
+                  restartGame={() => restartGame()}
+                  isGameOver={isGameOver}/>
       <div className="cards-container">
         {renderBoard()}
       </div>
-      {gameOver && (
+      {isGameOver && (
         <div className="gameOver-stamp">
           Game over
         </div>)}

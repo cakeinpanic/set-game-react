@@ -1,14 +1,9 @@
-$black: #041B15;
 
 .game {
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow: hidden;
-}
-
-h1 {
-  color: $black;
 }
 
 .cards-container {
@@ -43,81 +38,3 @@ h1 {
 .card {
   margin-bottom: 15px;
 }
-
-$btn-color: #ff8b51;
-
-.header {
-  width: 100%;
-  box-shadow: 0 7px 7px 0px rgba($black, .1);
-  background-color: rgba(255, 255, 255, .1);
-  padding: 10px 0 0 0;
-  margin-bottom: 25px;
-  .header-content {
-    max-width: 1000px;
-    display: flex;
-    justify-content: space-between;
-    margin: 0 auto 10px;
-    padding: 0 20px;
-    
-    box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
-  }
-  .info {
-    font-size: 1.1rem;
-    color: $btn-color;
-    font-weight: bold;
-    padding: 0.5em 1.4em;
-  }
-}
-
-.btn-container {
-  display: flex;
-  align-self: center;
-}
-
-
-.btn {
-  box-sizing: border-box;
-  appearance: none;
-  background-color: transparent;
-  border: 2px solid $btn-color;
-  border-radius: 0.6em;
-  color: $btn-color;
-  cursor: pointer;
-  display: flex;
-  align-self: center;
-  font-size: 1rem;
-  line-height: 1;
-  margin-left: 20px;
-  padding: 0.5em 2.2em;
-  text-decoration: none;
-  text-align: center;
-  text-transform: uppercase;
-  font-weight: 700;
-  
-  background: {
-    image: linear-gradient(45deg, $btn-color 50%, transparent 50%);
-    position: 100%;
-    size: 400%;
-  }
-  
-  transition: all 400ms ease-in-out;
-  
-  &:hover {
-    color: #fff;
-    outline: 0;
-    background-position: 0;
-  }
-  
-  &:focus {
-    outline: 0;
-  }
-  
-  &:disabled {
-    cursor: default;
-    // pointer-events: none;
-    opacity: .5;
-  }
-}
-
-
