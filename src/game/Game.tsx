@@ -2,11 +2,14 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Card } from '../card/Card'
 import './Game.scss'
 import { checkIfSet, ICard } from '../utils/set-utils'
-import { CardItem, GameUtils, SET_SIZE } from '../utils/game-utils'
+import { CardItem, GameUtils, MIN_BOARD_SIZE, SET_SIZE } from '../utils/game-utils'
 import { RulesPopup } from './RulesPopup'
 
 const TIMEOUT = 500
 const HINT_TIMEOUT = 2000;
+
+const CARD_HEIGHT = 180
+const CARD_WIDTH = 130
 
 export interface ICardView {
   card: CardItem,
@@ -31,8 +34,6 @@ export const Game = () => {
     const selectedCards = currentCards.filter((cardItem) => cardItem.isSelected && !cardItem.isRemoving)
 
     const handleSet = () => {
-
-
       setCurrentCards(currentCards.map(
         (item, i) => ({ ...item, isRemoving: currentCards[i].isSelected })))
 
@@ -94,22 +95,19 @@ export const Game = () => {
   }
 
   const renderBoard = () => {
-
-    const cardHeight = 180
-    const cardWidth = 130
-
+    const shiftX = currentCards.length > MIN_BOARD_SIZE ? CARD_WIDTH / 2 : 0
     return currentCards.map((card, index) => {
 
       if (card === null) {
         return <div key={index}></div>
       }
 
-      const top = Math.floor(index / 4) * cardHeight
-      const left = (index % 4) * cardWidth
+      const top = index < MIN_BOARD_SIZE ? Math.floor(index / 4) * CARD_HEIGHT : (index % MIN_BOARD_SIZE) * CARD_HEIGHT
+      const left = index < MIN_BOARD_SIZE ? (index % 4) * CARD_WIDTH : CARD_WIDTH * 4
 
       const divStyle = {
         top: top + 'px',
-        left: left + 'px'
+        left: (left - shiftX) + 'px'
       }
 
       return (<Card key={index}
