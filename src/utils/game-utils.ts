@@ -27,6 +27,11 @@ class Game {
     return this.allCards.length > 0
   }
 
+  replaceSelectedCards(selectedCards: number[]) {
+    this.removeSelectedCards(selectedCards)
+    this.replaceRemovedCardsWithNew()
+  }
+
   removeSelectedCards(selectedCards: number[]) {
     selectedCards.forEach((selectedIndex, i) => {
       this.playedCards.push(this.cardsOnTable[selectedIndex] as ICard)

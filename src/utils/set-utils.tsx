@@ -23,7 +23,8 @@ export function generateAllCards(): ICard[] {
 }
 
 export function checkIfSet(cards: CardItem[]): boolean {
-  return canMakeSetByType(cards, 'amount') &&
+  return cards.length === 3 &&
+    canMakeSetByType(cards, 'amount') &&
     canMakeSetByType(cards, 'color') &&
     canMakeSetByType(cards, 'shape') &&
     canMakeSetByType(cards, 'style')
@@ -37,8 +38,11 @@ function canMakeSetByType(cards: CardItem[], qualityName: string): boolean {
 
 export function findSet(cards: CardItem[]): number[] {
   for (let i = 0; i < cards.length; i++) {
+    if (!cards[i]) continue
     for (let j = i + 1; j < cards.length; j++) {
+      if (!cards[j]) continue
       for (let k = j + 1; k < cards.length; k++) {
+        if (!cards[k]) continue
         if (checkIfSet([cards[i], cards[j], cards[k]])) {
           return [i, j, k]
         }

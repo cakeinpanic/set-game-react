@@ -1,81 +1,109 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Card } from '../card/Card'
 import './Game.scss'
-import { checkIfSet } from '../utils/set-utils'
+import { checkIfSet, ICard } from '../utils/set-utils'
 import { CardItem, GameUtils, SET_SIZE } from '../utils/game-utils'
 import { RulesPopup } from './RulesPopup'
 
 const TIMEOUT = 500
 const HINT_TIMEOUT = 2000;
+
+export interface ICardView {
+  card: CardItem,
+  isSelected: boolean
+  isHinted: boolean
+  isRemoving?: boolean
+  isAppearing?: boolean
+}
+
 export const Game = () => {
-  const [currentCards, setCurrentCards] = useState<CardItem[]>([])
-  const [selectedCardIndexes, setSelectedCardIndexes] = useState<number[]>([])
-  const [hintedCardIndexes, setHintedCardIndexes] = useState<number[]>([])
+  const [currentCards, setCurrentCards] = useState<ICardView[]>([])
   const [gameOver, setGameOver] = useState<boolean>(false)
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
 
+  let hintRemovingTimeout = useRef<any>(null)
+
   useEffect(() => {restartGame()}, [])
-  useEffect(() => {console.log(currentCards)}, [currentCards])
+  //useEffect(() => {console.log(currentCards)}, [currentCards])
 
   useEffect(() => {
+    clearTimeout(hintRemovingTimeout.current)
+    const selectedCards = currentCards.filter((cardItem) => cardItem.isSelected && !cardItem.isRemoving)
+
     const handleSet = () => {
-      GameUtils.removeSelectedCards(selectedCardIndexes)
-      setSelectedCardIndexes([])
-      setCurrentCards([...GameUtils.cardsOnTable])
+
+
+      setCurrentCards(currentCards.map(
+        (item, i) => ({ ...item, isRemoving: currentCards[i].isSelected })))
 
       setTimeout(() => {
-        GameUtils.replaceRemovedCardsWithNew()
-        setCurrentCards([...GameUtils.cardsOnTable])
+        const selectedCardsIndexes = currentCards.map(
+          (cardItem, i) => cardItem.isSelected && !cardItem.isRemoving ? i : -1).filter(i => i > -1)
+
+        GameUtils.replaceSelectedCards(selectedCardsIndexes)
+
+        setCurrentCards(GameUtils.cardsOnTable.map((card, i) => ({
+          card,
+          isSelected: false,
+          isHinted: false,
+          isAppearing: selectedCardsIndexes.indexOf(i) > -1 || i >= currentCards.length
+        })))
       }, TIMEOUT)
     }
 
-    if (selectedCardIndexes.length === SET_SIZE) {
-      const selectedCards = selectedCardIndexes.map(cardIndex => currentCards[cardIndex])
-      const isSet = checkIfSet(selectedCards)
-
+    if (selectedCards.length === SET_SIZE) {
+      const isSet = checkIfSet(selectedCards.map(({ card }) => card))
+      console.log(isSet)
       if (isSet) {
-        setTimeout(() => {handleSet()}, TIMEOUT)
+        handleSet()
       } else {
-        setTimeout(() => {setSelectedCardIndexes([])}, TIMEOUT)
+        setTimeout(() => {
+          setCurrentCards(currentCards.map((item) => ({ ...item, isSelected: false })))
+        }, TIMEOUT)
       }
     }
-  }, [selectedCardIndexes, currentCards])
-
-  useEffect(() => {
-    setGameOver(GameUtils.nextSet.length === 0)
   }, [currentCards])
 
-  const onCardSelect = (isSelected: boolean, cardIndex: number) => {
-    setHintedCardIndexes([])
-    if (selectedCardIndexes.indexOf(cardIndex) === -1 && isSelected) {
-      setSelectedCardIndexes([...selectedCardIndexes, cardIndex])
-      return
-    }
-    setSelectedCardIndexes(selectedCardIndexes.filter(index => index !== cardIndex))
+  useEffect(() => {setGameOver(GameUtils.nextSet.length === 0)}, [currentCards])
 
+  const onCardSelect = (isSelected: boolean, cardIndex: number) => {
+    const updatedCards = currentCards.map(
+      (item, i) => ({ ...item, isSelected: i === cardIndex ? isSelected : item.isSelected, isHinted: false }))
+    setCurrentCards(updatedCards)
   }
+
 
   const hintSet = () => {
     const setCards = GameUtils.nextSet
     if (setCards.length) {
-      setHintedCardIndexes(setCards)
+      const updatedCards = currentCards.map((item, i) => ({ ...item, isHinted: setCards.indexOf(i) > -1 }))
+      setCurrentCards(updatedCards)
     }
-    setTimeout(()=>setHintedCardIndexes([]), HINT_TIMEOUT)
+
+    hintRemovingTimeout.current = setTimeout(
+      () => {
+        const updatedCards = currentCards.map((item) => ({ ...item, isHinted: false }))
+        setCurrentCards(updatedCards)
+      },
+      HINT_TIMEOUT)
   }
 
   const restartGame = () => {
     GameUtils.startGame()
-    setCurrentCards([...GameUtils.cardsOnTable])
+    setCurrentCards(GameUtils.cardsOnTable.map(card => ({ card, isSelected: false, isHinted: false })))
   }
 
   const renderBoard = () => {
+
     const cardHeight = 180
     const cardWidth = 130
 
     return currentCards.map((card, index) => {
-      if (!card) {
+
+      if (card === null) {
         return <div key={index}></div>
       }
+
       const top = Math.floor(index / 4) * cardHeight
       const left = (index % 4) * cardWidth
 
@@ -85,10 +113,11 @@ export const Game = () => {
       }
 
       return (<Card key={index}
-                    card={card}
+                    card={card.card as ICard}
                     style={divStyle}
-                    isSelected={selectedCardIndexes.indexOf(index) > -1}
-                    isHighlighted={hintedCardIndexes.indexOf(index) > -1}
+                    isRemoving={!!card.isRemoving}
+                    isSelected={card.isSelected}
+                    isHighlighted={card.isHinted}
                     onSelect={(newStatus) => onCardSelect(newStatus, index)}/>)
     })
   }

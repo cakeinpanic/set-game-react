@@ -1,4 +1,4 @@
-@keyframes slideInFromLeft {
+@keyframes appear {
   0% {
     transform: translateY(-10%);
     opacity: 0;
@@ -11,8 +11,22 @@
   }
 }
 
+@keyframes disappear {
+  100% {
+    transform: translateY(10%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 .card {
-  animation: .5s ease-out 0s 1 slideInFromLeft;
+  animation: .5s ease-out 0s 1 appear forwards;
   width: 115px;
   height: 170px;
   background: white;
@@ -26,6 +40,13 @@
   cursor: pointer;
   box-sizing: border-box;
   transition: all .1s ease-in;
+  
+  
+  &.removing {
+    animation: .5s ease-out 0s 1 disappear forwards;
+    -webkit-animation-fill-mode: forwards;
+    opacity: 0;
+  }
   
   &:after {
     display: block;
