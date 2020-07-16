@@ -77,7 +77,7 @@ export const Game = () => {
   const hintSet = () => {
     const setCards = GameUtils.nextSet
     if (setCards.length) {
-      const updatedCards = currentCards.map((item, i) => ({ ...item, isSelected: setCards.indexOf(i) > -1 }))
+      const updatedCards = currentCards.map((item, i) => ({ ...item, isHinted: setCards.indexOf(i) > -1 }))
       setCurrentCards(updatedCards)
     }
 
@@ -123,12 +123,14 @@ export const Game = () => {
   return (
     <div className="game">
       <div className="header">
-        <h1>SET GAME</h1>
-        <div className="btn-container">
-          <div className="info">CARDS LEFT: {GameUtils.allCards.length}</div>
-          <button className="btn" onClick={() => setIsModalVisible(true)}>HOW TO</button>
-          {!gameOver && <button onClick={hintSet} className="btn">HELP ME!</button>}
-          {gameOver && <button onClick={restartGame} className="btn">RESTART</button>}
+        <div className="header-content">
+          <h1>SET GAME</h1>
+          <div className="btn-container">
+            <div className="info">CARDS LEFT: {GameUtils.allCards.length}</div>
+            <button className="btn" onClick={() => setIsModalVisible(true)}>HOW TO</button>
+            {!gameOver && <button onClick={hintSet} className="btn">HELP ME!</button>}
+            {gameOver && <button onClick={restartGame} className="btn">RESTART</button>}
+          </div>
         </div>
       </div>
       <div className="cards-container">
