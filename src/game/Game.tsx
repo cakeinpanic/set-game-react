@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Card } from '../card/Card'
 import './Game.scss'
-import { checkIfSet, ICard } from '../utils/set-utils'
+import { checkIfSet } from '../utils/set-utils'
 import { CardItem, GameUtils, MIN_BOARD_SIZE, SET_SIZE } from '../utils/game-utils'
 import { RulesPopup } from './RulesPopup'
 
@@ -77,7 +77,7 @@ export const Game = () => {
   const hintSet = () => {
     const setCards = GameUtils.nextSet
     if (setCards.length) {
-      const updatedCards = currentCards.map((item, i) => ({ ...item, isHinted: setCards.indexOf(i) > -1 }))
+      const updatedCards = currentCards.map((item, i) => ({ ...item, isSelected: setCards.indexOf(i) > -1 }))
       setCurrentCards(updatedCards)
     }
 
@@ -96,9 +96,9 @@ export const Game = () => {
 
   const renderBoard = () => {
     const shiftX = currentCards.length > MIN_BOARD_SIZE ? CARD_WIDTH / 2 : 0
-    return currentCards.map((card, index) => {
+    return currentCards.map((item, index) => {
 
-      if (card === null) {
+      if (item.card === null) {
         return <div key={index}></div>
       }
 
@@ -111,11 +111,11 @@ export const Game = () => {
       }
 
       return (<Card key={index}
-                    card={card.card as ICard}
+                    card={item.card}
                     style={divStyle}
-                    isRemoving={!!card.isRemoving}
-                    isSelected={card.isSelected}
-                    isHighlighted={card.isHinted}
+                    isRemoving={!!item.isRemoving}
+                    isSelected={item.isSelected}
+                    isHighlighted={item.isHinted}
                     onSelect={(newStatus) => onCardSelect(newStatus, index)}/>)
     })
   }
@@ -133,12 +133,11 @@ export const Game = () => {
       </div>
       <div className="cards-container">
         {renderBoard()}
-        {gameOver && (<div className="gameOver">
-          <div className="stamp">
-            Game over
-          </div>
-        </div>)}
       </div>
+      {gameOver && (
+        <div className="gameOver-stamp">
+          Game over
+        </div>)}
       <RulesPopup isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}/>
 
     </div>

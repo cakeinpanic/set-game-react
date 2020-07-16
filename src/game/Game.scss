@@ -19,34 +19,25 @@ h1 {
   height: 600px;
   position: relative;
   justify-content: space-between;
-  .gameOver {
-    position: absolute;
-    top: -10px;
-    border-radius: 20px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: rgba(255,255,255, .3);
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    
-    .stamp {
-      transform: rotate(12deg);
-      color: #555;
-      font-size: 3rem;
-      font-weight: 700;
-      border: 0.25rem solid #555;
-      display: inline-block;
-      padding: 0.25rem 1rem;
-      text-transform: uppercase;
-      border-radius: 1rem;
-      -webkit-mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
-      -webkit-mask-size: 944px 604px;
-      mix-blend-mode: multiply;
-      
-    }
-  }
+}
+
+.gameOver-stamp {
+  transform: rotate(12deg);
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 10rem);
+  
+  color: #555;
+  font-size: 3rem;
+  font-weight: 700;
+  border: 0.25rem solid #555;
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  text-transform: uppercase;
+  border-radius: 1rem;
+  -webkit-mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
+  -webkit-mask-size: 944px 604px;
+  mix-blend-mode: multiply;
 }
 
 .card {
