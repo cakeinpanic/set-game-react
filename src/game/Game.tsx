@@ -99,7 +99,7 @@ export const Game = () => {
     return currentCards.map((item, index) => {
 
       if (item.card === null) {
-        return <div key={index}></div>
+        return '';
       }
 
       const top = index < MIN_BOARD_SIZE ? Math.floor(index / 4) * CARD_HEIGHT : (index % MIN_BOARD_SIZE) * CARD_HEIGHT

@@ -1,8 +1,8 @@
 import { CardItem } from './game-utils'
 
-export enum COLORS {RED = 'RED', GREEN = 'GREEN', BLUE = 'BLUE'}
-export enum SHAPE {CIRCLE = 'CIRCLE', SQUARE = 'SQUARE', ROMB = 'ROMB'}
-export enum STYLE {EMPTY = 'EMPTY', FILL = 'FILL', STRIPE = 'STRIPE'}
+export enum COLORS {RED = 'red', GREEN = 'green', BLUE = 'blue'}
+export enum SHAPE {CIRCLE = 'circle', SQUARE = 'square', ROMB = 'romb'}
+export enum STYLE {EMPTY = 'empty', FILL = 'fill', STRIPE = 'stripe'}
 
 export interface ICard {
   amount: number
